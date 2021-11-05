@@ -52,66 +52,71 @@ static void backward_sequence(void);
   */
 static void forward_sequence(void)
 {
-  BSP_LED_Toggle(LED1);
-  HAL_Delay(200);
-  BSP_LED_Toggle(LED2);
-  HAL_Delay(200);
-  BSP_LED_Toggle(LED3);
-  HAL_Delay(200);
+	BSP_LED_Toggle(LED1);
+	HAL_Delay(200);
+	BSP_LED_Toggle(LED2);
+	HAL_Delay(200);
+	BSP_LED_Toggle(LED3);
+	HAL_Delay(200);
 }
 
 static void backward_sequence(void)
 {
-  BSP_LED_Toggle(LED1);
-  HAL_Delay(200);
-  BSP_LED_Toggle(LED3);
-  HAL_Delay(200);
-  BSP_LED_Toggle(LED2);
-  HAL_Delay(200);
+	BSP_LED_Toggle(LED1);
+	HAL_Delay(200);
+	BSP_LED_Toggle(LED3);
+	HAL_Delay(200);
+	BSP_LED_Toggle(LED2);
+	HAL_Delay(200);
 }
 
 int main(void)
 {
-  /* STM32F4xx HAL library initialization:
-       - Configure the Flash prefetch
-       - Systick timer is configured by default as source of time base, but user 
-         can eventually implement his proper time base source (a general purpose 
-         timer for example or other time source), keeping in mind that Time base 
-         duration should be kept 1ms since PPP_TIMEOUT_VALUEs are defined and 
-         handled in milliseconds basis.
-       - Set NVIC Group Priority to 4
-       - Low Level Initialization
-     */
-  HAL_Init();
+	/* STM32F4xx HAL library initialization:
+	   - Configure the Flash prefetch
+	   - Systick timer is configured by default as source of time base, but user
+		 can eventually implement his proper time base source (a general purpose
+		 timer for example or other time source), keeping in mind that Time base
+		 duration should be kept 1ms since PPP_TIMEOUT_VALUEs are defined and
+		 handled in milliseconds basis.
+	   - Set NVIC Group Priority to 4
+	   - Low Level Initialization
+	 */
+	HAL_Init();
 
-  /* Configure the system clock to 180 MHz */
-  SystemClock_Config();
+	/* Configure the system clock to 180 MHz */
+	SystemClock_Config();
 
-  /* Initialize BSP Led for LED1, LED2 and LED3 */
-  BSP_LED_Init(LED1);
-  BSP_LED_Init(LED2);
-  BSP_LED_Init(LED3);
+	/* Initialize BSP Led for LED1, LED2 and LED3 */
+	BSP_LED_Init(LED1);
+	BSP_LED_Init(LED2);
+	BSP_LED_Init(LED3);
 
-  /* Initialize BSP PB for BUTTON_USER */
-  BSP_PB_Init(BUTTON_USER, BUTTON_MODE_GPIO);
+	/* Initialize BSP PB for BUTTON_USER */
+	BSP_PB_Init(BUTTON_USER, BUTTON_MODE_GPIO);
 
-  uint8_t flag = 1;
+	uint8_t flag = 0;
 
-  /* Infinite loop */
-  while (1)
-  {
-	  if(BSP_PB_GetState(BUTTON_USER)){
-		  flag = ~flag;
-	  }
+	/* Infinite loop */
+	while (1)
+	{
+		if(BSP_PB_GetState(BUTTON_USER))
+		{
+			BSP_LED_Off(LED1);
+			BSP_LED_Off(LED2);
+			BSP_LED_Off(LED3);
+			flag ^= 1;
+		}
 
-	  if(flag){
-		  forward_sequence();
-	  }
-	  else{
-		  backward_sequence();
-	  }
-
-  }
+		if(flag)
+		{
+			forward_sequence();
+		}
+		else
+		{
+			backward_sequence();
+		}
+	}
 }
 
 
