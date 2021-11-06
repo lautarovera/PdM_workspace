@@ -39,34 +39,34 @@ $(wildcard ../makefile.init) \
 $(wildcard ../makefile.targets) \
 
 
-BUILD_ARTIFACT_NAME := Ej0_blinky
+BUILD_ARTIFACT_NAME := Practica0
 BUILD_ARTIFACT_EXTENSION := elf
 BUILD_ARTIFACT_PREFIX :=
 BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME)$(if $(BUILD_ARTIFACT_EXTENSION),.$(BUILD_ARTIFACT_EXTENSION),)
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXECUTABLES += \
-Ej0_blinky.elf \
+Practica0.elf \
 
 SIZE_OUTPUT += \
 default.size.stdout \
 
 OBJDUMP_LIST += \
-Ej0_blinky.list \
+Practica0.list \
 
 OBJCOPY_BIN += \
-Ej0_blinky.bin \
+Practica0.bin \
 
 
 # All Target
 all: main-build
 
 # Main-build Target
-main-build: Ej0_blinky.elf secondary-outputs
+main-build: Practica0.elf secondary-outputs
 
 # Tool invocations
-Ej0_blinky.elf: $(OBJS) $(USER_OBJS) D:\Lautaro\CESE\1\ Bimestre\PDM\Repositorios\PdM_workspace\Ej0_blinky\STM32F429ZITX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "Ej0_blinky.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"D:\Lautaro\CESE\1 Bimestre\PDM\Repositorios\PdM_workspace\Ej0_blinky\STM32F429ZITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Ej0_blinky.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Practica0.elf: $(OBJS) $(USER_OBJS) /home/lautaro/CESE/1_Bimestre/PDM/Repositorios/PdM_workspace/Practica0/STM32F429ZITX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "Practica0.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/home/lautaro/CESE/1_Bimestre/PDM/Repositorios/PdM_workspace/Practica0/STM32F429ZITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Practica0.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -75,19 +75,19 @@ default.size.stdout: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	@echo 'Finished building: $@'
 	@echo ' '
 
-Ej0_blinky.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "Ej0_blinky.list"
+Practica0.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "Practica0.list"
 	@echo 'Finished building: $@'
 	@echo ' '
 
-Ej0_blinky.bin: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-objcopy  -O binary $(EXECUTABLES) "Ej0_blinky.bin"
+Practica0.bin: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objcopy  -O binary $(EXECUTABLES) "Practica0.bin"
 	@echo 'Finished building: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) $(SIZE_OUTPUT)$(OBJDUMP_LIST)$(EXECUTABLES)$(OBJS)$(S_DEPS)$(S_UPPER_DEPS)$(C_DEPS)$(OBJCOPY_BIN) Ej0_blinky.elf
+	-$(RM) $(SIZE_OUTPUT)$(OBJDUMP_LIST)$(EXECUTABLES)$(OBJS)$(S_DEPS)$(S_UPPER_DEPS)$(C_DEPS)$(OBJCOPY_BIN) Practica0.elf
 	-@echo ' '
 
 secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST) $(OBJCOPY_BIN)

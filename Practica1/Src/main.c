@@ -31,8 +31,14 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
+#define DELAY_LED_1    100
+#define DELAY_LED_2    500
+#define DELAY_LED_3    1000
+
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
+delay_t Led1, Led2, Led3;
+
 /* UART handler declaration */
 UART_HandleTypeDef UartHandle;
 
@@ -40,8 +46,6 @@ UART_HandleTypeDef UartHandle;
 
 static void SystemClock_Config(void);
 static void Error_Handler(void);
-static void forward_sequence(void);
-static void backward_sequence(void);
 
 /* Private functions ---------------------------------------------------------*/
 
@@ -50,25 +54,6 @@ static void backward_sequence(void);
   * @param  None
   * @retval None
   */
-static void forward_sequence(void)
-{
-	BSP_LED_Toggle(LED1);
-	HAL_Delay(200);
-	BSP_LED_Toggle(LED2);
-	HAL_Delay(200);
-	BSP_LED_Toggle(LED3);
-	HAL_Delay(200);
-}
-
-static void backward_sequence(void)
-{
-	BSP_LED_Toggle(LED1);
-	HAL_Delay(200);
-	BSP_LED_Toggle(LED3);
-	HAL_Delay(200);
-	BSP_LED_Toggle(LED2);
-	HAL_Delay(200);
-}
 
 int main(void)
 {
@@ -92,29 +77,27 @@ int main(void)
 	BSP_LED_Init(LED2);
 	BSP_LED_Init(LED3);
 
-	/* Initialize BSP PB for BUTTON_USER */
-	BSP_PB_Init(BUTTON_USER, BUTTON_MODE_GPIO);
-
-	uint8_t flag = 0;
+	/* Initialize API delay for LED1, LED2 and LED3 */
+	delayInit(&Led1, DELAY_LED_1);
+	delayInit(&Led2, DELAY_LED_2);
+	delayInit(&Led3, DELAY_LED_3);
 
 	/* Infinite loop */
 	while (1)
 	{
-		if(BSP_PB_GetState(BUTTON_USER))
+		if(delayRead(&Led1))
 		{
-			BSP_LED_Off(LED1);
-			BSP_LED_Off(LED2);
-			BSP_LED_Off(LED3);
-			flag ^= 1;
+			BSP_LED_Toggle(LED1);
 		}
 
-		if(flag)
+		if(delayRead(&Led2))
 		{
-			forward_sequence();
+			BSP_LED_Toggle(LED2);
 		}
-		else
+
+		if(delayRead(&Led3))
 		{
-			backward_sequence();
+			BSP_LED_Toggle(LED3);
 		}
 	}
 }

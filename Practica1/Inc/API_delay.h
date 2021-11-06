@@ -10,6 +10,8 @@
 
 #include <stdint.h>
 #include <stdlib.h>
+#include <stdbool.h>
+#include "stm32f4xx_hal.h"
 
 /* Variable que define el tiempo */
 typedef uint32_t tick_t;
