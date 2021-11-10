@@ -13,6 +13,9 @@
 #include <stdbool.h>
 #include "stm32f4xx_hal.h"
 
+/* Maximum value for delay */
+#define MAX_DELAY 10000u
+
 /* Variable que define el tiempo */
 typedef uint32_t tick_t;
 

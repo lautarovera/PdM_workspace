@@ -1,3 +1,4 @@
+"./Drivers/API/Src/API_delay.o"
 "./Drivers/BSP/STM32F4xx_Nucleo_144/stm32f4xx_nucleo_144.o"
 "./Drivers/CMSIS/system_stm32f4xx.o"
 "./Drivers/Core/Src/stm32f4xx_it.o"
@@ -95,6 +96,5 @@
 "./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_usart.o"
 "./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_usb.o"
 "./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_utils.o"
-"./Src/API_delay.o"
 "./Src/main.o"
 "./Startup/startup_stm32f429xx.o"

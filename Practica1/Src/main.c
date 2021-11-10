@@ -37,7 +37,7 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-delay_t Led1, Led2, Led3;
+static delay_t Led1, Led2, Led3;
 
 /* UART handler declaration */
 UART_HandleTypeDef UartHandle;
