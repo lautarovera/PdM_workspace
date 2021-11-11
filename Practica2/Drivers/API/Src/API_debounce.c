@@ -5,6 +5,8 @@
  *      Author: lautaro
  */
 
+#include "stm32f4xx_hal.h"  		/* <- HAL include */
+#include "stm32f4xx_nucleo_144.h" 	/* <- BSP include */
 #include "API_debounce.h"
 #include "API_delay.h"
 
@@ -16,30 +18,42 @@ typedef enum{
    BUTTON_FALLING,
    BUTTON_DOWN,
    BUTTON_RISING
-} button_state_t;
+} debounce_t;
 
-static button_state_t currentState;
+static debounce_t currentState;
 
 static delay_t debounceDelay;
 
-void (* buttonPressedCbk)();
+void (*buttonPressedCbk)(void);
 
-void (* buttonReleasedCbk)();
+void (*buttonReleasedCbk)(void);
 
-void debounceInit(void)
+bool_t debounceInit(void)
 {
+	bool_t result = delayInit(&debounceDelay, DEBOUNCE_DELAY);
 	currentState = BUTTON_UP;
-	delayInit(&debounceDelay, DEBOUNCE_DELAY);
+
+	return result;
 }
 
-void debounceSetPressedCbk(void (* callback)())
+void debounceSetPressedCbk(void (*callback)())
 {
-	(* buttonPressedCbk)() = &callback();
+	if(NULL != callback) {
+		buttonPressedCbk = callback;
+	}
+	else {
+		BSP_LED_Toggle(LED1);
+	}
 }
 
-void debounceSetReleasedCbk(void (* callback)())
+void debounceSetReleasedCbk(void (*callback)())
 {
-	(* buttonReleasedCbk)() = &callback();
+	if(NULL != callback) {
+		buttonReleasedCbk = callback;
+	}
+	else {
+		BSP_LED_Toggle(LED2);
+	}
 }
 
 void debounceUpdate(bool_t buttonState)
@@ -54,7 +68,7 @@ void debounceUpdate(bool_t buttonState)
 			break;
 		case BUTTON_FALLING:
 			if(delayRead(&debounceDelay)) {
-				(* buttonPressedCbk)();
+				(*buttonPressedCbk)();
 				currentState = BUTTON_DOWN;
 			}
 			break;
@@ -66,7 +80,7 @@ void debounceUpdate(bool_t buttonState)
 			break;
 		case BUTTON_RISING:
 			if(delayRead(&debounceDelay)) {
-				(* buttonReleasedCbk)();
+				(*buttonReleasedCbk)();
 				currentState = BUTTON_UP;
 			}
 			break;

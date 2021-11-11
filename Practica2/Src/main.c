@@ -20,7 +20,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "API_debounce.h"
 
 /** @addtogroup STM32F4xx_HAL_Examples
  * @{
@@ -28,8 +27,16 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
+
+#define DELAY_LED_1    			100u
+#define DELAY_LED_2    			500u
+#define DELAY_LED_3    			1000u
+#define DELAY_ALT_LED_ALL    	500u
+
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
+
+static delay_t Led1, Led2, Led3;
 
 /* Private function prototypes -----------------------------------------------*/
 
@@ -37,7 +44,20 @@ static void SystemClock_Config(void);
 static void Error_Handler(void);
 
 /* Private functions ---------------------------------------------------------*/
-
+/* Callback for button pressed */
+void buttonPressed(void)
+{
+	delayWrite(&Led1, DELAY_ALT_LED_ALL);
+	delayWrite(&Led2, DELAY_ALT_LED_ALL);
+	delayWrite(&Led3, DELAY_ALT_LED_ALL);
+}
+/* Callback for button released */
+void buttonReleased(void)
+{
+	delayWrite(&Led1, DELAY_LED_1);
+	delayWrite(&Led2, DELAY_LED_2);
+	delayWrite(&Led3, DELAY_LED_3);
+}
 /**
  * @brief  Main program
  * @param  None
@@ -60,25 +80,48 @@ int main(void)
 	/* Configure the system clock to 180 MHz */
 	SystemClock_Config();
 
-	/* Initialize BSP Led for LED1 */
+	/* Initialize BSP Led for LED1, LED2 and LED3 */
 	BSP_LED_Init(LED1);
+	BSP_LED_Init(LED2);
+	BSP_LED_Init(LED3);
+
 	/* Initialize BSP PB for BUTTON_USER */
 	BSP_PB_Init(BUTTON_USER, BUTTON_MODE_GPIO);
 
+	/* Initialize API delay for LED1, LED2 and LED3 */
+	delayInit(&Led1, DELAY_LED_1);
+	delayInit(&Led2, DELAY_LED_2);
+	delayInit(&Led3, DELAY_LED_3);
+
+	/* Initiliaze Debounce API */
 	debounceInit();
 
+	/* Set pressed button callback */
+	debounceSetPressedCbk(buttonPressed);
+
+	/* Set released button callback */
+	debounceSetReleasedCbk(buttonReleased);
 
 	/* Infinite loop */
-	while (1)
+	while (true)
 	{
-		debounceUpdate((bool_t)BSP_PB_GetState(BUTTON_USER), &pressed(), &released());
+		/* Debounce the button */
+		debounceUpdate((bool_t)BSP_PB_GetState(BUTTON_USER));
 
-		if(1){
-			BSP_LED_On(LED1);
-			HAL_Delay(100);
-			BSP_LED_Off(LED1);
-			HAL_Delay(100);
+		/* Toggle LEDs with non-blocking delays */
+		if(delayRead(&Led1))
+		{
+			BSP_LED_Toggle(LED1);
+		}
 
+		if(delayRead(&Led2))
+		{
+			BSP_LED_Toggle(LED2);
+		}
+
+		if(delayRead(&Led3))
+		{
+			BSP_LED_Toggle(LED3);
 		}
 	}
 }

@@ -7,14 +7,20 @@
 
 #include "API_delay.h"
 
-void delayInit(delay_t * delay, tick_t duration)
+bool_t delayInit(delay_t * delay, tick_t duration)
 {
+	bool_t result = false;
+
 	if((delay != NULL) && (duration <= MAX_DELAY))
 	{
 		delay->startTime = 0U;
 		delay->duration = duration;
 		delay->running = false;
+
+		result = true;
 	}
+
+	return result;
 }
 
 bool_t delayRead(delay_t * delay)

@@ -30,7 +30,7 @@ typedef struct{
 } delay_t;
 
 /* Inicializa la API */
-void delayInit(delay_t * delay, tick_t duration);
+bool_t delayInit(delay_t * delay, tick_t duration);
 /* Indica si el delay esta corriendo o no */
 bool_t delayRead(delay_t * delay);
 /* Define la duración del delay */

@@ -13,14 +13,23 @@
 #include <stdbool.h>
 #include "stm32f4xx_hal.h"
 
+/* Redefinición de bool para coherencia de estilos */
+typedef bool bool_t;
+
 /* Inicializa la API */
-void debounceInit(void);
+bool_t debounceInit(void);
 
-/* Configura el callback para el evento del botón presionado */
-void debounceSetPressedCbk(void (* callback)());
+/* Configura el callback para el evento del botón presionado
+ * Si se pasa NULL como parámetro se ejecuta el callback por defecto
+ * El callback por defecto es "togglear" el LED 1
+ */
+void debounceSetPressedCbk(void (*callback)());
 
-/* Configura el callback para el evento del botón liberado */
-void debounceSetReleasedCbk(void (* callback)());
+/* Configura el callback para el evento del botón liberado
+ * Si se pasa NULL como parámetro se ejecuta el callback por defecto
+ * El callback por defecto es "togglear" el LED 2
+ */
+void debounceSetReleasedCbk(void (*callback)());
 
 /* Actualiza la MEF */
 void debounceUpdate(bool_t buttonState);
