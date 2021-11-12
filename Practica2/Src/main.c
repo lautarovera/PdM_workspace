@@ -36,7 +36,9 @@
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 
-static delay_t Led1, Led2, Led3;
+static delay_t Led1;
+static delay_t Led2;
+static delay_t Led3;
 
 /* Private function prototypes -----------------------------------------------*/
 
@@ -47,6 +49,10 @@ static void Error_Handler(void);
 /* Callback for button pressed */
 void buttonPressed(void)
 {
+	BSP_LED_Off(LED1);
+	BSP_LED_Off(LED2);
+	BSP_LED_Off(LED3);
+
 	delayWrite(&Led1, DELAY_ALT_LED_ALL);
 	delayWrite(&Led2, DELAY_ALT_LED_ALL);
 	delayWrite(&Led3, DELAY_ALT_LED_ALL);
@@ -54,6 +60,10 @@ void buttonPressed(void)
 /* Callback for button released */
 void buttonReleased(void)
 {
+	BSP_LED_Off(LED1);
+	BSP_LED_Off(LED2);
+	BSP_LED_Off(LED3);
+
 	delayWrite(&Led1, DELAY_LED_1);
 	delayWrite(&Led2, DELAY_LED_2);
 	delayWrite(&Led3, DELAY_LED_3);
@@ -106,7 +116,7 @@ int main(void)
 	while (true)
 	{
 		/* Debounce the button */
-		debounceUpdate((bool_t)BSP_PB_GetState(BUTTON_USER));
+		debounceUpdate();
 
 		/* Toggle LEDs with non-blocking delays */
 		if(delayRead(&Led1))

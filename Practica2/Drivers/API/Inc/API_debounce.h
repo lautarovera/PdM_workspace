@@ -32,6 +32,6 @@ void debounceSetPressedCbk(void (*callback)());
 void debounceSetReleasedCbk(void (*callback)());
 
 /* Actualiza la MEF */
-void debounceUpdate(bool_t buttonState);
+void debounceUpdate(void);
 
 #endif /* API_DELAY_H_ */

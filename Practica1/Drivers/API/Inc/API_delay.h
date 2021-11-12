@@ -27,14 +27,14 @@ typedef struct{
    tick_t startTime;	/* Marca de tiempo de inicio */
    tick_t duration;		/* Duración del delay */
    bool_t running;		/* Bandera para indicar que el delay esta corriendo */
-} delay_t;
+}delay_t;
 
 /* Inicializa la API */
-void delayInit( delay_t * delay, tick_t duration );
+void delayInit(delay_t * delay, tick_t duration);
 /* Indica si el delay esta corriendo o no */
-bool_t delayRead( delay_t * delay );
+bool_t delayRead(delay_t * delay);
 /* Define la duración del delay */
-void delayWrite( delay_t * delay, tick_t duration );
+void delayWrite(delay_t * delay, tick_t duration);
 
 
 

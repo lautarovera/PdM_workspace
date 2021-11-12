@@ -31,13 +31,17 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
+
 #define DELAY_LED_1    100
 #define DELAY_LED_2    500
 #define DELAY_LED_3    1000
 
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-static delay_t Led1, Led2, Led3;
+
+static delay_t Led1;
+static delay_t Led2;
+static delay_t Led3;
 
 /* UART handler declaration */
 UART_HandleTypeDef UartHandle;

@@ -29,7 +29,11 @@ bool_t delayRead(delay_t * delay)
 			delay->startTime = (tick_t)HAL_GetTick();
 		}
 
-		result = (((tick_t)HAL_GetTick() - delay->startTime) >= delay->duration) ? true : false;
+		if(((tick_t)HAL_GetTick() - delay->startTime) >= delay->duration)
+		{
+			delay->running = false;
+			result = true;
+		}
 	}
 
 	return result;

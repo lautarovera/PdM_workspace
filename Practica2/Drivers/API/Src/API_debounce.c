@@ -56,32 +56,42 @@ void debounceSetReleasedCbk(void (*callback)())
 	}
 }
 
-void debounceUpdate(bool_t buttonState)
+void debounceUpdate(void)
 {
 	switch(currentState)
 	{
 		case BUTTON_UP:
-			if(!buttonState) {
+			if(true == (bool_t)BSP_PB_GetState(BUTTON_USER)) {
 				delayRead(&debounceDelay);
 				currentState = BUTTON_FALLING;
 			}
 			break;
 		case BUTTON_FALLING:
-			if(delayRead(&debounceDelay)) {
-				(*buttonPressedCbk)();
-				currentState = BUTTON_DOWN;
+			if(true == delayRead(&debounceDelay)) {
+				if(true == (bool_t)BSP_PB_GetState(BUTTON_USER)) {
+					(*buttonPressedCbk)();
+					currentState = BUTTON_DOWN;
+				}
+			}
+			else {
+				currentState = BUTTON_UP;
 			}
 			break;
 		case BUTTON_DOWN:
-			if(buttonState) {
+			if(false == (bool_t)BSP_PB_GetState(BUTTON_USER)) {
 				delayRead(&debounceDelay);
-				currentState = BUTTON_FALLING;
+				currentState = BUTTON_RISING;
 			}
 			break;
 		case BUTTON_RISING:
-			if(delayRead(&debounceDelay)) {
-				(*buttonReleasedCbk)();
-				currentState = BUTTON_UP;
+			if(true == delayRead(&debounceDelay)) {
+				if(false == (bool_t)BSP_PB_GetState(BUTTON_USER)) {
+					(*buttonReleasedCbk)();
+					currentState = BUTTON_UP;
+				}
+			}
+			else {
+				currentState = BUTTON_DOWN;
 			}
 			break;
 		default:
