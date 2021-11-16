@@ -116,7 +116,7 @@ int main(void)
 	while (true)
 	{
 		/* Debounce the button */
-		debounceUpdate();
+		debounceUpdate((bool_t)BSP_PB_GetState(BUTTON_USER));
 
 		/* Toggle LEDs with non-blocking delays */
 		if(delayRead(&Led1))

@@ -11,7 +11,6 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "stm32f4xx_hal.h"
 
 /* Redefinición de bool para coherencia de estilos */
 typedef bool bool_t;
@@ -32,6 +31,6 @@ void debounceSetPressedCbk(void (*callback)());
 void debounceSetReleasedCbk(void (*callback)());
 
 /* Actualiza la MEF */
-void debounceUpdate(void);
+void debounceUpdate(bool_t buttonState);
 
 #endif /* API_DELAY_H_ */
