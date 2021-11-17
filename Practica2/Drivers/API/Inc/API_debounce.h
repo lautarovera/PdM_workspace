@@ -15,8 +15,8 @@
 /* Redefinición de bool para coherencia de estilos */
 typedef bool bool_t;
 
-/* Inicializa la API */
-bool_t debounceInit(void);
+/* Inicializa la API definiendo el tiempo para el antirrebote */
+bool_t debounceInit(uint16_t debounce_delay);
 
 /* Configura el callback para el evento del botón presionado
  * Si se pasa NULL como parámetro se ejecuta el callback por defecto

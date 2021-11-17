@@ -28,6 +28,7 @@
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 
+#define DEBOUNCE_DELAY 			40u
 #define DELAY_LED_1    			100u
 #define DELAY_LED_2    			500u
 #define DELAY_LED_3    			1000u
@@ -104,7 +105,7 @@ int main(void)
 	delayInit(&Led3, DELAY_LED_3);
 
 	/* Initiliaze Debounce API */
-	debounceInit();
+	debounceInit(DEBOUNCE_DELAY);
 
 	/* Set pressed button callback */
 	debounceSetPressedCbk(buttonPressed);

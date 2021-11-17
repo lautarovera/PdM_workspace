@@ -8,8 +8,6 @@
 #include "API_debounce.h"
 #include "API_delay.h"
 
-#define DEBOUNCE_DELAY 40u
-
 /* Estructura para el manejo de la API */
 typedef enum{
    BUTTON_UP,
@@ -26,9 +24,9 @@ void (*buttonPressedCbk)(void);
 
 void (*buttonReleasedCbk)(void);
 
-bool_t debounceInit(void)
+bool_t debounceInit(uint16_t debounce_delay)
 {
-	bool_t result = delayInit(&debounceDelay, DEBOUNCE_DELAY);
+	bool_t result = delayInit(&debounceDelay, debounce_delay);
 	currentState = BUTTON_UP;
 
 	return result;
@@ -46,6 +44,7 @@ void debounceSetReleasedCbk(void (*callback)())
 	if(NULL != callback) {
 		buttonReleasedCbk = callback;
 	}
+
 }
 
 void debounceUpdate(bool_t buttonState)
