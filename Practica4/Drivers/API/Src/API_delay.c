@@ -5,6 +5,7 @@
  *      Author: lautaro
  */
 
+#include <stdlib.h>
 #include "API_delay.h"
 #include "stm32f4xx_hal.h"
 

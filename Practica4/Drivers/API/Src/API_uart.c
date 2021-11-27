@@ -5,9 +5,8 @@
  *      Author: lautaro
  */
 
+#include <stdlib.h>
 #include "API_uart.h"
-#include "stm32f4xx_hal.h"
-#include "stm32f4xx_nucleo_144.h"
 
 /* Tipos de datos ------------------------------------------------------------*/
 
@@ -27,9 +26,9 @@ UART_HandleTypeDef uart_handler;
 
 uart_handler_t uart_handler_default = {
 		/* baud_rate */		9600u,
-		/* word_length */	API_UART_WL_8B,
-		/* stop_bits */		API_UART_SB_1B,
-		/* parity */		API_UART_P_NONE,
+		/* word_length */	UART_WORDLENGTH_8B,
+		/* stop_bits */		UART_STOPBITS_1,
+		/* parity */		UART_PARITY_NONE,
 };
 
 /* Funciones ------------------------------------------------------------*/
@@ -73,5 +72,5 @@ bool uartInit(uint32_t bauds, word_length_t word_bits, stop_bits_t stop_bits, pa
 }
 
 void uartSendString(uint8_t *pstring, uint16_t size){
-	HAL_UART_Transmit(&uart_handler, (uint8_t *)&pstring, size, 0xFFFF);
+	HAL_UART_Transmit(&uart_handler, pstring, size, 0xFFFF);
 }

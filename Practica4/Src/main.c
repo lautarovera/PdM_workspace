@@ -33,6 +33,7 @@
 #define DELAY_LED_2    			500u
 #define DELAY_LED_3    			1000u
 #define DELAY_ALT_LED_ALL    	500u
+#define UART_BUFFER_SIZE		64u
 
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
@@ -41,12 +42,15 @@ static delay_t Led1;
 static delay_t Led2;
 static delay_t Led3;
 
+static uint8_t uart_buffer[UART_BUFFER_SIZE] = {0u};
+
 /* Private function prototypes -----------------------------------------------*/
 
 static void SystemClock_Config(void);
 static void Error_Handler(void);
 
 /* Private functions ---------------------------------------------------------*/
+
 /* Callback for button pressed */
 void buttonPressed(void)
 {
@@ -57,7 +61,10 @@ void buttonPressed(void)
 	delayWrite(&Led1, DELAY_ALT_LED_ALL);
 	delayWrite(&Led2, DELAY_ALT_LED_ALL);
 	delayWrite(&Led3, DELAY_ALT_LED_ALL);
+
+	sprintf((char *)uart_buffer, "\rLED 1: %d ms \tLED 2: %d ms \tLED 3: %d ms ", DELAY_ALT_LED_ALL, DELAY_ALT_LED_ALL, DELAY_ALT_LED_ALL);
 }
+
 /* Callback for button released */
 void buttonReleased(void)
 {
@@ -68,7 +75,10 @@ void buttonReleased(void)
 	delayWrite(&Led1, DELAY_LED_1);
 	delayWrite(&Led2, DELAY_LED_2);
 	delayWrite(&Led3, DELAY_LED_3);
+
+	sprintf((char *)uart_buffer, "\rLED 1: %d ms \tLED 2: %d ms \tLED 3: %d ms ", DELAY_LED_1, DELAY_LED_2, DELAY_LED_3);
 }
+
 /**
  * @brief  Main program
  * @param  None
@@ -100,7 +110,8 @@ int main(void)
 	BSP_PB_Init(BUTTON_USER, BUTTON_MODE_GPIO);
 
 	/* Initialize API UART */
-	if(true != uartInit(9600, 0, 3, 1)){
+	/* Check API for input parameters, wrong inputs will trigger the default configuration */
+	if(true != uartInit(9600u, 0u, 0u, 0u)){
 		/* Initialization Error */
 		Error_Handler();
 	}
@@ -110,7 +121,7 @@ int main(void)
 	delayInit(&Led2, DELAY_LED_2);
 	delayInit(&Led3, DELAY_LED_3);
 
-	/* Initiliaze Debounce API */
+	/* Initialize Debounce API */
 	debounceInit(DEBOUNCE_DELAY);
 
 	/* Set pressed button callback */
@@ -118,6 +129,8 @@ int main(void)
 
 	/* Set released button callback */
 	debounceSetReleasedCbk(buttonReleased);
+
+	sprintf((char *)uart_buffer, "\rLED 1: %d ms \tLED 2: %d ms \tLED 3: %d ms ", DELAY_LED_1, DELAY_LED_2, DELAY_LED_3);
 
 	/* Infinite loop */
 	while (true)
@@ -140,6 +153,8 @@ int main(void)
 		{
 			BSP_LED_Toggle(LED3);
 		}
+
+		uartSendString(uart_buffer, UART_BUFFER_SIZE);
 	}
 }
 
@@ -191,6 +206,7 @@ static void SystemClock_Config(void)
 		Error_Handler();
 	}
 }
+
 /**
  * @brief  This function is executed in case of error occurrence.
  * @param  None

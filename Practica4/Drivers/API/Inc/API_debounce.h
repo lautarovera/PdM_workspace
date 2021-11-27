@@ -9,7 +9,6 @@
 #define API_DEBOUNCE_H_
 
 #include <stdint.h>
-#include <stdlib.h>
 #include <stdbool.h>
 
 /* Inicializa la API definiendo el tiempo para el antirrebote */

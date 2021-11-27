@@ -5,6 +5,7 @@
  *      Author: lautaro
  */
 
+#include <stdlib.h>
 #include "API_debounce.h"
 #include "API_delay.h"
 
