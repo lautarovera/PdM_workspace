@@ -24,9 +24,9 @@ void (*buttonPressedCbk)(void);
 
 void (*buttonReleasedCbk)(void);
 
-bool_t debounceInit(uint16_t debounce_delay)
+bool debounceInit(uint16_t debounce_delay)
 {
-	bool_t result = delayInit(&debounceDelay, debounce_delay);
+	bool result = delayInit(&debounceDelay, debounce_delay);
 	currentState = BUTTON_UP;
 
 	return result;
@@ -47,7 +47,7 @@ void debounceSetReleasedCbk(void (*callback)())
 
 }
 
-void debounceUpdate(bool_t buttonState)
+void debounceUpdate(bool buttonState)
 {
 	switch(currentState)
 	{

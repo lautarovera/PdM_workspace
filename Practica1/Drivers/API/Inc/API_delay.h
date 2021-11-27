@@ -20,19 +20,19 @@
 typedef uint32_t tick_t;
 
 /* Redefinición de bool para coherencia de estilos */
-typedef bool bool_t;
+typedef bool bool;
 
 /* Estructura para el manejo de la API */
 typedef struct{
    tick_t startTime;	/* Marca de tiempo de inicio */
    tick_t duration;		/* Duración del delay */
-   bool_t running;		/* Bandera para indicar que el delay esta corriendo */
+   bool running;		/* Bandera para indicar que el delay esta corriendo */
 }delay_t;
 
 /* Inicializa la API */
 void delayInit(delay_t * delay, tick_t duration);
 /* Indica si el delay esta corriendo o no */
-bool_t delayRead(delay_t * delay);
+bool delayRead(delay_t * delay);
 /* Define la duración del delay */
 void delayWrite(delay_t * delay, tick_t duration);
 

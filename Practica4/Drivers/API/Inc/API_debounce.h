@@ -12,11 +12,8 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-/* Redefinición de bool para coherencia de estilos */
-typedef bool bool_t;
-
 /* Inicializa la API definiendo el tiempo para el antirrebote */
-bool_t debounceInit(uint16_t debounce_delay);
+bool debounceInit(uint16_t debounce_delay);
 
 /* Configura el callback para el evento del botón presionado
  * Si se pasa NULL como parámetro se ejecuta el callback por defecto
@@ -31,6 +28,6 @@ void debounceSetPressedCbk(void (*callback)());
 void debounceSetReleasedCbk(void (*callback)());
 
 /* Actualiza la MEF */
-void debounceUpdate(bool_t buttonState);
+void debounceUpdate(bool buttonState);
 
 #endif /* API_DELAY_H_ */

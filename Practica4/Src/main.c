@@ -99,6 +99,12 @@ int main(void)
 	/* Initialize BSP PB for BUTTON_USER */
 	BSP_PB_Init(BUTTON_USER, BUTTON_MODE_GPIO);
 
+	/* Initialize API UART */
+	if(true != uartInit(9600, 0, 3, 1)){
+		/* Initialization Error */
+		Error_Handler();
+	}
+
 	/* Initialize API delay for LED1, LED2 and LED3 */
 	delayInit(&Led1, DELAY_LED_1);
 	delayInit(&Led2, DELAY_LED_2);

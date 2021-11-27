@@ -6,10 +6,11 @@
  */
 
 #include "API_delay.h"
+#include "stm32f4xx_hal.h"
 
-bool_t delayInit(delay_t * delay, tick_t duration)
+bool delayInit(delay_t * delay, tick_t duration)
 {
-	bool_t result = false;
+	bool result = false;
 
 	if((delay != NULL) && (duration <= MAX_DELAY))
 	{
@@ -23,9 +24,9 @@ bool_t delayInit(delay_t * delay, tick_t duration)
 	return result;
 }
 
-bool_t delayRead(delay_t * delay)
+bool delayRead(delay_t * delay)
 {
-	bool_t result = false;
+	bool result = false;
 
 	if(delay != NULL)
 	{

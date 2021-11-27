@@ -17,9 +17,9 @@ void delayInit(delay_t * delay, tick_t duration)
 	}
 }
 
-bool_t delayRead(delay_t * delay)
+bool delayRead(delay_t * delay)
 {
-	bool_t result = false;
+	bool result = false;
 
 	if(delay != NULL)
 	{
