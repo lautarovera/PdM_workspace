@@ -110,4 +110,34 @@ static void BtlCoreIdle(void)
     }
 }
 
+static btlcore_boolean_t BtlCoreErase(void)
+{
+
+}
+
+static btlcore_boolean_t BtlCoreDownload(void)
+{
+
+}
+
+static btlcore_boolean_t BtlCoreUpdate(void)
+{
+
+}
+
+static btlcore_boolean_t BtlCoreSelfCheck(void)
+{
+
+}
+
+static void BtlCoreReset(void)
+{
+
+}
+
+static void BtlCoreError(void)
+{
+
+}
+
 /* EOF */

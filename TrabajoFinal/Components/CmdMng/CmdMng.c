@@ -70,6 +70,26 @@ void CmdMng_Read(cmdmng_event_t *event)
     CmdMngGetEvent(event);
 }
 
+static void CmdMngState0(void)
+{
+
+}
+
+static void CmdMngIdle(void)
+{
+
+}
+
+static void CmdMngParse(void)
+{
+
+}
+
+static void CmdMngEvent(void)
+{
+
+}
+
 static cmdmng_boolean_t CmdMngParseMsg(void)
 {
 

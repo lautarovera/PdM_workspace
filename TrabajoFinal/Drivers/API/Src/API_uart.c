@@ -45,7 +45,7 @@ static bool configIsCorrect(uint32_t bauds, word_length_t word_bits, stop_bits_t
 bool uartInit(uint32_t bauds, word_length_t word_bits, stop_bits_t stop_bits, parity_t parity){
 	bool result = true;
 
-	uart_handler.Instance        = USARTx;
+	uart_handler.Instance        = USART3;
 
 	if(true == configIsCorrect(bauds, word_bits, stop_bits, parity)){
 		uart_handler.Init.BaudRate   = bauds;

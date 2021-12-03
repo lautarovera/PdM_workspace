@@ -101,6 +101,12 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef *huart)
 
 }
 
+void HAL_WWDG_MspInit(WWDG_HandleTypeDef *hwwdg)
+{
+  /* WWDG Peripheral clock enable */
+  __HAL_RCC_WWDG_CLK_ENABLE();
+}
+
 /**
   * @}
   */

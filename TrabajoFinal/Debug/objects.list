@@ -1,3 +1,5 @@
+"./Components/BtlCore/BtlCore.o"
+"./Components/CmdMng/CmdMng.o"
 "./Drivers/API/Src/API_debounce.o"
 "./Drivers/API/Src/API_delay.o"
 "./Drivers/API/Src/API_uart.o"
