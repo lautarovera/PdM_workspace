@@ -18,5 +18,8 @@
 /*----------------------- VARIABLES ----------------------*/
 
 /*----------------------- PROTOTYPES ---------------------*/
+void BtlCore_Init(void);
+
+void BtlCore_Task(void);
 
 #endif /* BTLCORE_H_ */
