@@ -16,7 +16,8 @@
 /*----------------------- DEFINES ------------------------*/
 #define CMDMNG_QUEUE_SIZE       64u
 #define CMDMNG_BUFFER_SIZE      16u
-#define CMDMNG_EOL              '\n'
+#define CMDMNG_LF               '\n'
+#define CMDMNG_CR               '\r'
 #define CMDMNG_EVENT_RAISED     0u
 #define CMDMNG_EVENT_LENGTH     4u
 
@@ -66,6 +67,8 @@ static cmdmng_runtimedata_t cmdmng_runtimedata_default = {
 
 static cmdmng_runtimedata_t cmdmng_runtimedata;
 
+static uint8_t cmdmng_rx_buffer[CMDMNG_BUFFER_SIZE];
+
 /*----------------------- PROTOTYPES ---------------------*/
 static cmdmng_boolean_t CmdMngParseMsg(void);
 static void CmdMngQueueWrite(uint8_t data);
@@ -85,15 +88,7 @@ void CmdMng_Init(void)
 
 void CmdMng_Task(void)
 {
-    uint8_t data;
-
-    uartReceive(&data, 1u);
-
-    if(CMDMNG_QUEUE_SIZE != cmdmng_runtimedata.queue.size) {
-        CmdMngQueueWrite(data);
-
-        cmdmng_runtimedata.msg_received = (CMDMNG_EOL == data) ? CMDMNG_BOOLEAN_TRUE : CMDMNG_BOOLEAN_FALSE;
-    }
+    uartReceive(cmdmng_rx_buffer, CMDMNG_BUFFER_SIZE);
 
     switch(cmdmng_runtimedata.state)
     {
@@ -125,7 +120,24 @@ static void CmdMngState0(void)
 
 static void CmdMngIdle(void)
 {
+    if(CMDMNG_QUEUE_SIZE != cmdmng_runtimedata.queue.size) {
+        for(uint8_t i = 0u; i < CMDMNG_BUFFER_SIZE; i++)
+        {
+            if(CMDMNG_LF == cmdmng_rx_buffer[i]) {
+                cmdmng_runtimedata.msg_received =  CMDMNG_BOOLEAN_TRUE;
+                break;
+            }
+            else if(0u == cmdmng_rx_buffer[i]) {
+                /* Buffer empty, do nothing */
+            }
+            else {
+                CmdMngQueueWrite(cmdmng_rx_buffer[i]);
+            }
+        }
+    }
+
     if(CMDMNG_BOOLEAN_TRUE == cmdmng_runtimedata.msg_received) {
+        memset(cmdmng_rx_buffer, 0u, CMDMNG_BUFFER_SIZE);
         cmdmng_runtimedata.msg_received = CMDMNG_BOOLEAN_FALSE;
         cmdmng_runtimedata.state = CMDMNG_STATE_PARSE;
     }
@@ -175,7 +187,8 @@ static void CmdMngQueueWrite(uint8_t data)
 
 static uint8_t CmdMngQueueRead(void)
 {
-    uint8_t data = cmdmng_runtimedata.queue.buffer[cmdmng_runtimedata.queue.head++];
+    uint8_t data = cmdmng_runtimedata.queue.buffer[cmdmng_runtimedata.queue.head];
+    cmdmng_runtimedata.queue.buffer[cmdmng_runtimedata.queue.head++] = 0u;
 
     if(CMDMNG_QUEUE_SIZE == cmdmng_runtimedata.queue.head) {
         cmdmng_runtimedata.queue.head = 0;
@@ -194,11 +207,11 @@ static cmdmng_boolean_t CmdMngParseMsg(void)
         {
             uint8_t data = CmdMngQueueRead();
 
-            if((CMDMNG_EOL == data) || (i > CMDMNG_BUFFER_SIZE)) {
+            if((CMDMNG_CR == data) || (i > CMDMNG_BUFFER_SIZE)) {
                 break;
             }
             else {
-                cmdmng_runtimedata.msg_buffer[i++] = data;
+                cmdmng_runtimedata.msg_buffer[i] = data;
             }
         }
 

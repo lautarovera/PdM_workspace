@@ -5,8 +5,12 @@
  *      Author: lautaro
  */
 
-#include <stdlib.h>
+#include "stm32f4xx_hal.h"          /* <- HAL include */
+#include "stm32f4xx_nucleo_144.h"   /* <- BSP include */
+#include <string.h>
 #include "API_uart.h"
+
+#define RX_BUFFER_SIZE      16u
 
 /* Tipos de datos ------------------------------------------------------------*/
 
@@ -30,6 +34,8 @@ uart_handler_t uart_handler_default = {
 		/* stop_bits */		UART_STOPBITS_1,
 		/* parity */		UART_PARITY_NONE,
 };
+
+uint8_t rx_buffer[RX_BUFFER_SIZE] = {0u};
 
 /* Funciones ------------------------------------------------------------*/
 
@@ -80,5 +86,13 @@ void uartSendString(uint8_t *pstring, uint16_t size)
 
 void uartReceive(uint8_t *pstring, uint16_t size)
 {
-    HAL_UART_Receive(&uart_handler, pstring, size, 0xFFFF);
+    HAL_UART_Receive(&uart_handler, pstring, size, 1000u);
 }
+
+void uartRead(uint8_t *buffer, uint8_t len)
+{
+    if((NULL != buffer) && (RX_BUFFER_SIZE < len)) {
+        memcpy(buffer, rx_buffer, RX_BUFFER_SIZE);
+    }
+}
+

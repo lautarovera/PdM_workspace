@@ -19,13 +19,12 @@
 /*----------------------- TYPES --------------------------*/
 
 /*----------------------- VARIABLES ----------------------*/
-/* WWDG handler declaration */
-static WWDG_HandleTypeDef WwdgHandle;
 
 /*----------------------- PROTOTYPES ---------------------*/
 static void Init(void);
 static void SystemClock_Config(void);
 static void Error_Handler(void);
+static void Reset(void);
 
 /*----------------------- ROUTINES -----------------------*/
 int main()
@@ -34,14 +33,12 @@ int main()
 
     for(;;)
     {
-        CmdMng_Task();
-//        BtlCore_Task();
-        /* Refresh WWDG: update counter value to 127, the refresh window is:
-         * between 35 ms (~728 * (127-80)) and 46 ms (~728 * 64)
-         */
-        if (HAL_WWDG_Refresh (&WwdgHandle) != HAL_OK || BtlCore_FaultRaised() == BTLCORE_BOOLEAN_TRUE) {
-            Error_Handler ();
+        if(BTLCORE_BOOLEAN_TRUE == BtlCore_ResetRequested()) {
+            Reset();
         }
+
+        CmdMng_Task();
+        BtlCore_Task();
     }
 }
 
@@ -64,7 +61,7 @@ static void Init(void)
 
     /* Initialize API UART */
     /* Check API for input parameters, wrong inputs will trigger the default configuration */
-    if(true != uartInit(9600u, 0u, 0u, 0u)){
+    if(true != uartInit(921600u, 0u, 0u, 0u)){
         /* Initialization Error */
         Error_Handler();
     }
@@ -72,35 +69,35 @@ static void Init(void)
     CmdMng_Init();
     BtlCore_Init();
 
-    /* Check if the system has resumed from WWDG reset */
-    if (__HAL_RCC_GET_FLAG(RCC_FLAG_WWDGRST) != RESET) {
-        /* WWDGRST flag set: Turn LED1 on */
-        BSP_LED_On (LED1);
-
-        /* Clear reset flags */
-        __HAL_RCC_CLEAR_RESET_FLAGS();
-    }
-    else {
-        /* WWDGRST flag is not set: Turn LED1 off */
-        BSP_LED_Off (LED1);
-    }
-
-    /* Configure the WWDG peripheral */
-    /* WWDG clock counter = (PCLK1 (45MHz)/4096)/8) = 1373 Hz (~728 us)
-     WWDG Window value = 80 means that the WWDG counter should be refreshed only
-     when the counter is below 80 (and greater than 64/0x40) otherwise a reset will
-     be generated.
-     WWDG Counter value = 127, WWDG timeout = ~728 us * 64 = 46 ms */
-    WwdgHandle.Instance = WWDG;
-
-    WwdgHandle.Init.Prescaler = WWDG_PRESCALER_8;
-    WwdgHandle.Init.Window = 80;
-    WwdgHandle.Init.Counter = 127;
-
-    if (HAL_WWDG_Init (&WwdgHandle) != HAL_OK) {
-        /* Initialization Error */
-        Error_Handler ();
-    }
+//    /* Check if the system has resumed from WWDG reset */
+//    if (__HAL_RCC_GET_FLAG(RCC_FLAG_WWDGRST) != RESET) {
+//        /* WWDGRST flag set: Turn LED1 on */
+//        BSP_LED_On (LED1);
+//
+//        /* Clear reset flags */
+//        __HAL_RCC_CLEAR_RESET_FLAGS();
+//    }
+//    else {
+//        /* WWDGRST flag is not set: Turn LED1 off */
+//        BSP_LED_Off (LED1);
+//    }
+//
+//    /* Configure the WWDG peripheral */
+//    /* WWDG clock counter = (PCLK1 (45MHz)/4096)/8) = 1373 Hz (~728 us)
+//     WWDG Window value = 80 means that the WWDG counter should be refreshed only
+//     when the counter is below 80 (and greater than 64/0x40) otherwise a reset will
+//     be generated.
+//     WWDG Counter value = 127, WWDG timeout = ~728 us * 64 = 46 ms */
+//    WwdgHandle.Instance = WWDG;
+//
+//    WwdgHandle.Init.Prescaler = WWDG_PRESCALER_8;
+//    WwdgHandle.Init.Window = 80;
+//    WwdgHandle.Init.Counter = 127;
+//
+//    if (HAL_WWDG_Init (&WwdgHandle) != HAL_OK) {
+//        /* Initialization Error */
+//        Error_Handler ();
+//    }
 }
 
 static void SystemClock_Config(void)
@@ -165,4 +162,8 @@ static void Error_Handler(void)
     }
 }
 
+static void Reset(void)
+{
+    HAL_NVIC_SystemReset();
+}
 /* EOF */

@@ -10,11 +10,8 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "stm32f4xx_hal.h"  		/* <- HAL include */
-#include "stm32f4xx_nucleo_144.h" 	/* <- BSP include */
 
 /* Defines ------------------------------------------------------------*/
-
 
 /* Types ------------------------------------------------------------*/
 
@@ -33,6 +30,8 @@ typedef enum{
 	API_UART_P_EVEN,
 	API_UART_P_ODD
 }parity_t;
+
+/* Variables ------------------------------------------------------------*/
 
 /* Prototypes ------------------------------------------------------------*/
 
@@ -54,5 +53,7 @@ bool uartInit(uint32_t bauds, word_length_t word_bits, stop_bits_t stop_bits, pa
 void uartSendString(uint8_t *pstring, uint16_t size);
 
 void uartReceive(uint8_t *pstring, uint16_t size);
+
+void uartRead(uint8_t *buffer, uint8_t len);
 
 #endif /* API_UART_H_ */

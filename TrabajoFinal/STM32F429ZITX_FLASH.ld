@@ -183,7 +183,14 @@ SECTIONS
     _ebss = .;         /* define a global symbol at bss end */
     __bss_end__ = _ebss;
   } >RAM
-
+  
+  .noinit (NOLOAD):
+  {
+    PROVIDE(__start_noinit_data = .);
+    KEEP(*(.noinit))
+    PROVIDE(__stop_noinit_data = .);
+  } >RAM
+  
   /* User_heap_stack section, used to check that there is enough "RAM" Ram  type memory left */
   ._user_heap_stack :
   {

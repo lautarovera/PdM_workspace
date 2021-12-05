@@ -28,4 +28,6 @@ void BtlCore_Task(void);
 
 btlcore_boolean_t BtlCore_FaultRaised(void);
 
+btlcore_boolean_t BtlCore_ResetRequested(void);
+
 #endif /* BTLCORE_H_ */
