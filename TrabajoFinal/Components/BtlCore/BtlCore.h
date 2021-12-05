@@ -14,6 +14,10 @@
 /*----------------------- DEFINES ------------------------*/
 
 /*----------------------- TYPES --------------------------*/
+typedef enum {
+    BTLCORE_BOOLEAN_FALSE               = 0u,
+    BTLCORE_BOOLEAN_TRUE                = 1u
+}btlcore_boolean_t;
 
 /*----------------------- VARIABLES ----------------------*/
 
@@ -22,6 +26,6 @@ void BtlCore_Init(void);
 
 void BtlCore_Task(void);
 
-void BtlCore_FaultRaised(void);
+btlcore_boolean_t BtlCore_FaultRaised(void);
 
 #endif /* BTLCORE_H_ */

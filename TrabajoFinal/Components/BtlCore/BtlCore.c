@@ -10,6 +10,7 @@
 #include "CmdMng.h"
 #include "BtlCore.h"
 #include "API_delay.h"
+#include "API_uart.h"
 
 /*----------------------- DEFINES ------------------------*/
 #define BTLCORE_DELAY_ERASE             500u
@@ -18,53 +19,52 @@
 
 /*----------------------- TYPES --------------------------*/
 typedef enum {
-    BTLCORE_STATE_0             = 0u,
-    BTLCORE_STATE_IDLE          = 1u,
-    BTLCORE_STATE_ERASE         = 2u,
-    BTLCORE_STATE_DOWNLOAD      = 3u,
-    BTLCORE_STATE_UPDATE        = 4u,
-    BTLCORE_STATE_SELFCHECK     = 5u,
-    BTLCORE_STATE_RESET         = 6u,
-    BTLCORE_STATE_ERROR         = 255u
+    BTLCORE_STATE_0                     = 0u,
+    BTLCORE_STATE_IDLE                  = 1u,
+    BTLCORE_STATE_ERASE                 = 2u,
+    BTLCORE_STATE_DOWNLOAD              = 3u,
+    BTLCORE_STATE_UPDATE                = 4u,
+    BTLCORE_STATE_SELFCHECK             = 5u,
+    BTLCORE_STATE_RESET                 = 6u,
+    BTLCORE_STATE_ERROR                 = 255u
 } btlcore_state_t;
 
 typedef enum {
-    BTLCORE_TARGET_APP          = 0u,
-    BTLCORE_TARGET_BTL          = 1u,
-    BTLCORE_TARGET_DEFAULT      = 255u
+    BTLCORE_TARGET_APP                  = 0u,
+    BTLCORE_TARGET_BTL                  = 1u,
+    BTLCORE_TARGET_DEFAULT              = 255u
 } btlcore_target_t;
-
-typedef enum {
-    BTLCORE_BOOLEAN_FALSE       = 0u,
-    BTLCORE_BOOLEAN_TRUE        = 1u
-}btlcore_boolean_t;
 
 typedef struct {
     btlcore_state_t state;
-    btlcore_target_t boot_target __attribute__((section(".noinit"),zero_init));
     btlcore_boolean_t fault;
     cmdmng_event_t event;
 } btlcore_runtimedata_t;
 
 /*----------------------- VARIABLES ----------------------*/
+static btlcore_target_t btlcore_boot_target __attribute__((section(".noinit")));
+
 static btlcore_runtimedata_t btlcore_runtimedata_default = {
     /* state */         BTLCORE_STATE_0,
-    /* boot_target */   BTLCORE_TARGET_DEFAULT,
     /* fault */         BTLCORE_BOOLEAN_FALSE,
-    /* event */         CMDMNG_NO_REQUEST
+    /* event */         CMDMNG_EVENT_NO_REQUEST
 };
+
 static btlcore_runtimedata_t btlcore_runtimedata;
+
 static delay_t erase_delay;
+
 static delay_t download_delay;
+
 static delay_t update_delay;
 
 /*----------------------- PROTOTYPES ---------------------*/
 static void BtlCoreState0(void);
 static void BtlCoreIdle(void);
-static btlcore_boolean_t BtlCoreErase(void);
-static btlcore_boolean_t BtlCoreDownload(void);
-static btlcore_boolean_t BtlCoreUpdate(void);
-static btlcore_boolean_t BtlCoreSelfCheck(void);
+static void BtlCoreErase(void);
+static void BtlCoreDownload(void);
+static void BtlCoreUpdate(void);
+static void BtlCoreSelfCheck(void);
 static void BtlCoreReset(void);
 static void BtlCoreError(void);
 
@@ -81,7 +81,7 @@ void BtlCore_Init(void)
 
 void BtlCore_Task(void)
 {
-    CmdMng_Read(btlcore_runtimedata.event);
+    CmdMng_Read(&btlcore_runtimedata.event);
 
     switch(btlcore_runtimedata.state)
     {
@@ -113,7 +113,7 @@ void BtlCore_Task(void)
     }
 }
 
-void BtlCore_FaultRaised(void)
+btlcore_boolean_t BtlCore_FaultRaised(void)
 {
     return btlcore_runtimedata.fault;
 }
@@ -121,11 +121,11 @@ void BtlCore_FaultRaised(void)
 static void BtlCoreState0(void)
 {
     if(CMDMNG_EVENT_TRIGGER_BTL == btlcore_runtimedata.event) {
-        btlcore_runtimedata.boot_target = BTLCORE_TARGET_BTL;
+        btlcore_boot_target = BTLCORE_TARGET_BTL;
         NVIC_SystemReset();
     }
 
-    if(BTLCORE_TARGET_BTL == btlcore_runtimedata.boot_target) {
+    if(BTLCORE_TARGET_BTL == btlcore_boot_target) {
         btlcore_runtimedata.state = BTLCORE_STATE_IDLE;
     }
 }
@@ -137,7 +137,7 @@ static void BtlCoreIdle(void)
     }
 }
 
-static btlcore_boolean_t BtlCoreErase(void)
+static void BtlCoreErase(void)
 {
     if(delayRead(&erase_delay))
     {
@@ -150,7 +150,7 @@ static btlcore_boolean_t BtlCoreErase(void)
     }
 }
 
-static btlcore_boolean_t BtlCoreDownload(void)
+static void BtlCoreDownload(void)
 {
     if(delayRead(&download_delay))
     {
@@ -161,7 +161,7 @@ static btlcore_boolean_t BtlCoreDownload(void)
     }
 }
 
-static btlcore_boolean_t BtlCoreUpdate(void)
+static void BtlCoreUpdate(void)
 {
     if(delayRead(&update_delay))
     {
@@ -169,14 +169,14 @@ static btlcore_boolean_t BtlCoreUpdate(void)
     }
 }
 
-static btlcore_boolean_t BtlCoreSelfCheck(void)
+static void BtlCoreSelfCheck(void)
 {
     btlcore_runtimedata.state = BTLCORE_STATE_RESET;
 }
 
 static void BtlCoreReset(void)
 {
-    btlcore_runtimedata.boot_target = BTLCORE_TARGET_APP;
+    btlcore_boot_target = BTLCORE_TARGET_APP;
     NVIC_SystemReset();
 }
 
