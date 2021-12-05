@@ -22,4 +22,6 @@ void BtlCore_Init(void);
 
 void BtlCore_Task(void);
 
+void BtlCore_FaultRaised(void);
+
 #endif /* BTLCORE_H_ */

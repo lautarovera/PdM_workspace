@@ -33,7 +33,8 @@ uart_handler_t uart_handler_default = {
 
 /* Funciones ------------------------------------------------------------*/
 
-static bool configIsCorrect(uint32_t bauds, word_length_t word_bits, stop_bits_t stop_bits, parity_t parity){
+static bool configIsCorrect(uint32_t bauds, word_length_t word_bits, stop_bits_t stop_bits, parity_t parity)
+{
 	bool baud_rate_ok = (bauds >= 50u && bauds <= 921600u) ? true : false;
 	bool word_length_ok = (word_bits >= 0u && word_bits <= 2u) ? true : false;
 	bool stop_bits_ok = (stop_bits >= 0u && stop_bits <= 2u) ? true : false;
@@ -42,7 +43,8 @@ static bool configIsCorrect(uint32_t bauds, word_length_t word_bits, stop_bits_t
 	return (baud_rate_ok && word_length_ok && stop_bits_ok && parity_ok) ? true : false;
 }
 
-bool uartInit(uint32_t bauds, word_length_t word_bits, stop_bits_t stop_bits, parity_t parity){
+bool uartInit(uint32_t bauds, word_length_t word_bits, stop_bits_t stop_bits, parity_t parity)
+{
 	bool result = true;
 
 	uart_handler.Instance        = USART3;
@@ -71,6 +73,12 @@ bool uartInit(uint32_t bauds, word_length_t word_bits, stop_bits_t stop_bits, pa
 	return result;
 }
 
-void uartSendString(uint8_t *pstring, uint16_t size){
+void uartSendString(uint8_t *pstring, uint16_t size)
+{
 	HAL_UART_Transmit(&uart_handler, pstring, size, 0xFFFF);
+}
+
+void uartReceive(uint8_t *pstring, uint16_t size)
+{
+    HAL_UART_Receive(&uart_handler, pstring, size, 0xFFFF);
 }

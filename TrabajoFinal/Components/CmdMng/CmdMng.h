@@ -15,10 +15,11 @@
 
 /*----------------------- TYPES --------------------------*/
 typedef enum {
-    CMDMNG_TRIGGER_BTL          = 0u,
-    CMDMNG_REQUEST_ERASE        = 1u,
-    CMDMNG_REQUEST_DOWNLOAD     = 2u,
-    CMDMNG_NO_REQUEST           = 255u
+    CMDMNG_EVENT_NO_REQUEST           = 0u,
+    CMDMNG_EVENT_TRIGGER_BTL          = 1u,
+    CMDMNG_EVENT_REQUEST_ERASE        = 2u,
+    CMDMNG_EVENT_REQUEST_DOWNLOAD     = 3u,
+    CMDMNG_EVENT_MAX_NUMBER           = 4u
 } cmdmng_event_t;
 
 /*----------------------- VARIABLES ----------------------*/

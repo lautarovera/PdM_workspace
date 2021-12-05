@@ -53,4 +53,6 @@ bool uartInit(uint32_t bauds, word_length_t word_bits, stop_bits_t stop_bits, pa
  */
 void uartSendString(uint8_t *pstring, uint16_t size);
 
+void uartReceive(uint8_t *pstring, uint16_t size);
+
 #endif /* API_UART_H_ */

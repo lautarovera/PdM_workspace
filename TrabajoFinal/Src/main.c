@@ -39,7 +39,7 @@ int main()
         /* Refresh WWDG: update counter value to 127, the refresh window is:
          * between 35 ms (~728 * (127-80)) and 46 ms (~728 * 64)
          */
-        if (HAL_WWDG_Refresh (&WwdgHandle) != HAL_OK) {
+        if (HAL_WWDG_Refresh (&WwdgHandle) != HAL_OK || BtlCore_FaultRaised()) {
             Error_Handler ();
         }
     }
