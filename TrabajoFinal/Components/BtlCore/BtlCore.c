@@ -141,6 +141,7 @@ static void BtlCoreState0(void)
 static void BtlCoreIdle(void)
 {
     if(CMDMNG_EVENT_REQUEST_ERASE == btlcore_runtimedata.event) {
+        uartSendString("START ERASE\r\n", sizeof("START ERASE\r\n"));
         btlcore_runtimedata.state = BTLCORE_STATE_ERASE;
     }
 }
